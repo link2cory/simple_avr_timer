@@ -5,6 +5,16 @@
 /*******************************************************************************
 * PUBLIC TYPEDEFS
 *******************************************************************************/
+typedef enum timer_prescale_t {
+  TIMER_PRESCALE_0,
+  TIMER_PRESCALE_1,
+  TIMER_PRESCALE_8,
+  TIMER_PRESCALE_64,
+  TIMER_PRESCALE_256,
+  TIMER_PRESCALE_1024,
+  TIMER_PRESCALE_EXTERNAL
+} timer_prescale_t;
+
 typedef struct timer_attr_t {
   // register locations
   uint8_t *tccr;
@@ -12,11 +22,13 @@ typedef struct timer_attr_t {
   uint8_t *tifr;
   uint8_t *timsk;
 
-  uint8_t prescale;
+  timer_prescale_t prescale;
   uint8_t timer_id;
 } timer_attr_t;
 
 typedef uint8_t timer_d_t;
+
+
 /*******************************************************************************
 * PUBLIC FUNCTION DECLARATIONS
 *******************************************************************************/

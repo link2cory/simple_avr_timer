@@ -1,4 +1,6 @@
 #include "unity.h"
+#include <time.h>
+#include <stdlib.h>
 
 /*******************************************************************************
 * MODULE UNDER TEST
@@ -10,12 +12,31 @@
 *******************************************************************************/
 timer_d_t timer_handle;
 
+// fake registers
+uint8_t tccr = 0;
+uint8_t tcnt = 0;
+uint8_t tifr = 0;
+uint8_t timsk = 0;
+
 /*******************************************************************************
 * Setup and Teardown
 *******************************************************************************/
 void setUp(void)
 {
+  srand(time(NULL));
+
+  tccr = (uint8_t)rand();
+  tcnt = (uint8_t)rand();
+  tifr = (uint8_t)rand();
+  timsk = (uint8_t)rand();
+
   timer_attr_t config;
+  config.tccr = &tccr;
+  config.tcnt = &tcnt;
+  config.tifr = &tifr;
+  config.timsk = &timsk;
+  config.timer_id = 0;
+  config.prescale = TIMER_PRESCALE_0;
   timer_construct(config, &timer_handle);
 }
 
@@ -23,7 +44,7 @@ void tearDown(void)
 {
 }
 
-void test_timer_NeedToImplement(void)
+void test_construct_initializes_tccr(void)
 {
-    TEST_IGNORE_MESSAGE("Need to Implement timer");
+  TEST_ASSERT(tccr == 0);
 }
