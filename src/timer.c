@@ -10,6 +10,7 @@ typedef struct timer_t {
   uint8_t *timsk;
 
   timer_prescale_t prescale;
+  timer_isr_trigger_t isr_trigger;
 } timer_t;
 /*******************************************************************************
 * Private Data
@@ -26,9 +27,11 @@ void timer_construct(timer_attr_t config, timer_d_t *handle) {
   timer.tcnt = config.tcnt;
   timer.tifr = config.tifr;
   timer.timsk = config.timsk;
+
   timer.prescale = config.prescale;
+  timer.isr_trigger = config.isr_trigger;
 
   *timer.tccr = 0 | (timer.prescale);
   *timer.tcnt = 0;
-  *timer.timsk = 0;
+  *timer.timsk = 0 | timer.isr_trigger;
 }

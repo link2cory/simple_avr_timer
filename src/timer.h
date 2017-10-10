@@ -15,6 +15,12 @@ typedef enum timer_prescale_t {
   TIMER_PRESCALE_EXTERNAL
 } timer_prescale_t;
 
+typedef enum timer_isr_trigger_t {
+  TIMER_ISR_TRIGGER_NONE,
+  TIMER_ISR_TRIGGER_OVERFLOW,
+  TIMER_ISR_TRIGGER_OUTPUT_COMPARE
+} timer_isr_trigger_t;
+
 typedef struct timer_attr_t {
   // register locations
   uint8_t *tccr;
@@ -24,6 +30,7 @@ typedef struct timer_attr_t {
 
   timer_prescale_t prescale;
   uint8_t timer_id;
+  timer_isr_trigger_t isr_trigger;
 } timer_attr_t;
 
 typedef uint8_t timer_d_t;

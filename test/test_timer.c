@@ -37,6 +37,7 @@ void setUp(void)
   config.timsk = &timsk;
   config.timer_id = 0;
   config.prescale = TIMER_PRESCALE_0;
+  config.isr_trigger = TIMER_ISR_TRIGGER_OVERFLOW;
   timer_construct(config, &timer_handle);
 }
 
@@ -56,5 +57,5 @@ void test_construct_initializes_tcnt(void)
 
 void test_construct_initializes_timsk(void)
 {
-  TEST_ASSERT(timsk == 0);
+  TEST_ASSERT(timsk == 1);
 }
