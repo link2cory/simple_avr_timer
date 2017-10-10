@@ -56,6 +56,9 @@ void tearDown(void)
   timer_destruct(TIMER_ID_0);
 }
 
+/*******************************************************************************
+* Tests
+*******************************************************************************/
 void test_construct_initializes_tccr(void)
 {
   TEST_ASSERT(tccr_0 == 0);
