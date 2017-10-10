@@ -12,7 +12,6 @@ typedef struct timer_t {
   uint8_t *tccr;
   uint8_t *tcnt;
   uint8_t *tifr;
-  uint8_t *timsk;
 
   timer_prescale_t prescale;
   timer_isr_trigger_t isr_trigger;
@@ -22,26 +21,38 @@ typedef struct timer_t {
 * Private Data
 *******************************************************************************/
 static timer_t timers[NUM_TIMERS];
+static uint8_t *_timsk;
 /*******************************************************************************
 * Private Function Declarations
 *******************************************************************************/
+void _setInterruptTrigger(timer_id_t id, timer_isr_trigger_t trigger);
+
 /*******************************************************************************
 * Public Function Definitions
 *******************************************************************************/
+void timer_init(uint8_t *timsk) {
+    _timsk = timsk;
+    *_timsk = 0;
+}
+
 timer_err_t timer_construct(timer_attr_t config) {
   timer_err_t err = TIMER_ERR_NONE;
   if (timers[config.timer_id].status == TIMER_STATUS_READY) {
     timers[config.timer_id].tccr = config.tccr;
     timers[config.timer_id].tcnt = config.tcnt;
     timers[config.timer_id].tifr = config.tifr;
-    timers[config.timer_id].timsk = config.timsk;
+    _timsk = config.timsk;
 
     timers[config.timer_id].prescale = config.prescale;
     timers[config.timer_id].isr_trigger = config.isr_trigger;
 
+
     *timers[config.timer_id].tccr = 0 | (config.prescale);
     *timers[config.timer_id].tcnt = 0;
-    *timers[config.timer_id].timsk = 0 | config.isr_trigger;
+
+    _setInterruptTrigger(config.timer_id, config.isr_trigger);
+
+    // *timers[config.timer_id].timsk = 0 | config.isr_trigger;
 
     timers[config.timer_id].status = TIMER_STATUS_BUSY;
   } else {
@@ -52,4 +63,21 @@ timer_err_t timer_construct(timer_attr_t config) {
 
 void timer_destruct(timer_id_t timer_id) {
   timers[timer_id].status = TIMER_STATUS_READY;
+}
+
+/*******************************************************************************
+* Private Function Definitions
+*******************************************************************************/
+void _setInterruptTrigger(timer_id_t id, timer_isr_trigger_t trigger) {
+  switch(id) {
+    case TIMER_ID_0:
+      *_timsk |= (trigger << 0);
+    break;
+    case TIMER_ID_1:
+      *_timsk |= (trigger << 2);
+    break;
+    case TIMER_ID_2:
+      *_timsk |= (trigger << 6);
+    break;
+  }
 }
