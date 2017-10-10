@@ -53,3 +53,8 @@ void test_construct_initializes_tcnt(void)
 {
   TEST_ASSERT(tcnt == 0);
 }
+
+void test_construct_initializes_timsk(void)
+{
+  TEST_ASSERT(timsk == 0);
+}

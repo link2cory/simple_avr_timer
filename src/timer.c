@@ -30,4 +30,5 @@ void timer_construct(timer_attr_t config, timer_d_t *handle) {
 
   *timer.tccr = 0 | (timer.prescale);
   *timer.tcnt = 0;
+  *timer.timsk = 0;
 }
