@@ -5,6 +5,16 @@
 /*******************************************************************************
 * PUBLIC TYPEDEFS
 *******************************************************************************/
+typedef enum timer_err_t {
+  TIMER_ERR_NONE,
+  TIMER_ERR_TIMER_IN_USE
+} timer_err_t;
+
+typedef enum timer_status_t {
+  TIMER_STATUS_READY,
+  TIMER_STATUS_BUSY
+} timer_status_t;
+
 typedef enum timer_prescale_t {
   TIMER_PRESCALE_0,
   TIMER_PRESCALE_1,
@@ -39,5 +49,6 @@ typedef uint8_t timer_d_t;
 /*******************************************************************************
 * PUBLIC FUNCTION DECLARATIONS
 *******************************************************************************/
-void timer_construct(timer_attr_t config, timer_d_t *handle);
+timer_err_t timer_construct(timer_attr_t config, timer_d_t *handle);
+void timer_destruct(void);
 #endif // _TIMER_H

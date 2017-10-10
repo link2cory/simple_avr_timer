@@ -43,6 +43,7 @@ void setUp(void)
 
 void tearDown(void)
 {
+  timer_destruct();
 }
 
 void test_construct_initializes_tccr(void)
@@ -58,4 +59,38 @@ void test_construct_initializes_tcnt(void)
 void test_construct_initializes_timsk(void)
 {
   TEST_ASSERT(timsk == 1);
+}
+
+void test_construct_fails_for_timer_already_in_use(void)
+{
+  timer_d_t timer_handle;
+  timer_attr_t config;
+
+  config.timer_id = 0;
+
+  config.tccr = &tccr;
+  config.tcnt = &tcnt;
+  config.tifr = &tifr;
+  config.timsk = &timsk;
+  config.prescale = TIMER_PRESCALE_0;
+  config.isr_trigger = TIMER_ISR_TRIGGER_OVERFLOW;
+
+  TEST_ASSERT(timer_construct(config, &timer_handle) == TIMER_ERR_TIMER_IN_USE);
+}
+
+void test_construct_succeeds_for_timer_not_already_in_use(void)
+{
+  timer_d_t timer_handle;
+  timer_attr_t config;
+
+  config.timer_id = 1;
+
+  config.tccr = &tccr;
+  config.tcnt = &tcnt;
+  config.tifr = &tifr;
+  config.timsk = &timsk;
+  config.prescale = TIMER_PRESCALE_0;
+  config.isr_trigger = TIMER_ISR_TRIGGER_OVERFLOW;
+
+  TEST_ASSERT(timer_construct(config, &timer_handle) == TIMER_ERR_NONE);
 }
