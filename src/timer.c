@@ -1,6 +1,11 @@
 #include "timer.h"
 
 /*******************************************************************************
+* Private Defines
+*******************************************************************************/
+#define NUM_TIMERS 3
+
+/*******************************************************************************
 * Private Typedefs
 *******************************************************************************/
 typedef struct timer_t {
@@ -16,14 +21,14 @@ typedef struct timer_t {
 /*******************************************************************************
 * Private Data
 *******************************************************************************/
-static timer_t timers[3];
+static timer_t timers[NUM_TIMERS];
 /*******************************************************************************
 * Private Function Declarations
 *******************************************************************************/
 /*******************************************************************************
 * Public Function Definitions
 *******************************************************************************/
-timer_err_t timer_construct(timer_attr_t config, timer_d_t *handle) {
+timer_err_t timer_construct(timer_attr_t config) {
   timer_err_t err = TIMER_ERR_NONE;
   if (timers[config.timer_id].status == TIMER_STATUS_READY) {
     timers[config.timer_id].tccr = config.tccr;
@@ -45,6 +50,6 @@ timer_err_t timer_construct(timer_attr_t config, timer_d_t *handle) {
   return err;
 }
 
-void timer_destruct(void) {
-  timers[0].status = TIMER_STATUS_READY;
+void timer_destruct(timer_id_t timer_id) {
+  timers[timer_id].status = TIMER_STATUS_READY;
 }

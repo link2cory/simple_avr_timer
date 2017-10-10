@@ -31,6 +31,12 @@ typedef enum timer_isr_trigger_t {
   TIMER_ISR_TRIGGER_OUTPUT_COMPARE
 } timer_isr_trigger_t;
 
+typedef enum timer_id_t {
+  TIMER_ID_0,
+  TIMER_ID_1,
+  TIMER_ID_2
+} timer_id_t;
+
 typedef struct timer_attr_t {
   // register locations
   uint8_t *tccr;
@@ -39,16 +45,14 @@ typedef struct timer_attr_t {
   uint8_t *timsk;
 
   timer_prescale_t prescale;
-  uint8_t timer_id;
+  timer_id_t timer_id;
   timer_isr_trigger_t isr_trigger;
 } timer_attr_t;
-
-typedef uint8_t timer_d_t;
 
 
 /*******************************************************************************
 * PUBLIC FUNCTION DECLARATIONS
 *******************************************************************************/
-timer_err_t timer_construct(timer_attr_t config, timer_d_t *handle);
-void timer_destruct(void);
+timer_err_t timer_construct(timer_attr_t config);
+void timer_destruct(timer_id_t timer_id);
 #endif // _TIMER_H
