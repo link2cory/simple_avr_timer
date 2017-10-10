@@ -11,16 +11,16 @@
 * Local Data
 *******************************************************************************/
 // fake individual timer registers
-uint8_t tccr_0 = 0;
-uint8_t tcnt_0 = 0;
-uint8_t tccr_1 = 0;
-uint8_t tcnt_1 = 0;
-uint8_t tccr_2 = 0;
-uint8_t tcnt_2 = 0;
+uint8_t tccr_0;
+uint8_t tcnt_0;
+uint8_t tccr_1;
+uint8_t tcnt_1;
+uint8_t tccr_2;
+uint8_t tcnt_2;
 
 // fake common timer registers
-uint8_t tifr = 0;
-uint8_t timsk = 0;
+uint8_t tifr;
+uint8_t timsk;
 
 /*******************************************************************************
 * Private Function Declarations
