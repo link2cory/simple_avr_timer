@@ -29,4 +29,5 @@ void timer_construct(timer_attr_t config, timer_d_t *handle) {
   timer.prescale = config.prescale;
 
   *timer.tccr = 0 | (timer.prescale);
+  *timer.tcnt = 0;
 }

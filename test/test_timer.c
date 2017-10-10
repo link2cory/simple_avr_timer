@@ -48,3 +48,8 @@ void test_construct_initializes_tccr(void)
 {
   TEST_ASSERT(tccr == 0);
 }
+
+void test_construct_initializes_tcnt(void)
+{
+  TEST_ASSERT(tcnt == 0);
+}
