@@ -53,6 +53,7 @@ typedef struct timer_attr_t {
 /*******************************************************************************
 * PUBLIC FUNCTION DECLARATIONS
 *******************************************************************************/
+void timer_init(uint8_t *timsk);
 timer_err_t timer_construct(timer_attr_t config);
 void timer_destruct(timer_id_t timer_id);
 #endif // _TIMER_H
