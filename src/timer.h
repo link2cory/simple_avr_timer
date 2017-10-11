@@ -41,16 +41,31 @@ typedef enum timer_id_t {
   TIMER_ID_2
 } timer_id_t;
 
+typedef enum timer_mode_t {
+  TIMER_MODE_NORMAL = 0,
+  TIMER_MODE_CTC = 2
+} timer_mode_t;
+
 typedef struct timer_attr_t {
   // register locations
-  uint8_t *tccr;
+  uint8_t *tccra;
+  uint8_t *tccrb;
   uint8_t *tcnt;
   uint8_t *tifr;
   uint8_t *timsk;
+  uint8_t *ocra_8;
+  uint8_t *ocrb_8;
+  uint16_t *ocra_16;
+  uint16_t *ocrb_16;
 
   timer_prescale_t prescale;
   timer_id_t timer_id;
   timer_isr_trigger_t isr_trigger;
+  timer_mode_t timer_mode;
+  uint8_t ocr_val_a_8;
+  uint8_t ocr_val_b_8;
+  uint16_t ocr_val_a_16;
+  uint16_t ocr_val_b_16;
   void *callback;
 } timer_attr_t;
 
