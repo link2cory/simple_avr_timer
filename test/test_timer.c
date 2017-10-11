@@ -28,8 +28,11 @@ static uint8_t timsk;
 timer_err_t _make_timer(
   timer_id_t id,
   timer_prescale_t prescale,
-  timer_isr_trigger_t isr_trigger
+  timer_isr_trigger_t isr_trigger,
+  void *callback
 );
+
+void _cb();
 
 /*******************************************************************************
 * Setup and Teardown
@@ -70,13 +73,13 @@ void test_init_initializes_common_registers(void)
 
 void test_construct_initializes_tccr(void)
 {
-  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(tccr_0 == 0);
 }
 
 void test_construct_initializes_tcnt(void)
 {
-  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(tcnt_0 == 0);
 }
 
@@ -85,21 +88,21 @@ void test_construct_initializes_timsk(void)
   // timer 0 uses bits 0 thru 1
   // timer 1 uses bits 2 thru 5
   // timer 2 uses bits 6 thru 8
-  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(timsk == 1);
 
-  _make_timer(TIMER_ID_1, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_1, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(timsk == 5);
 
-  _make_timer(TIMER_ID_2, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_2, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(timsk == 69);
 }
 
 void test_construct_fails_for_timer_already_in_use(void)
 {
-  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW);
+  _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb);
   TEST_ASSERT(
-    _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW)
+    _make_timer(TIMER_ID_0, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb)
     == TIMER_ERR_TIMER_IN_USE
   );
 }
@@ -107,7 +110,7 @@ void test_construct_fails_for_timer_already_in_use(void)
 void test_construct_succeeds_for_timer_not_already_in_use(void)
 {
   TEST_ASSERT(
-    _make_timer(TIMER_ID_1, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW)
+    _make_timer(TIMER_ID_1, TIMER_PRESCALE_0, TIMER_ISR_TRIGGER_OVERFLOW, _cb)
     == TIMER_ERR_NONE
   );
 }
@@ -118,7 +121,8 @@ void test_construct_succeeds_for_timer_not_already_in_use(void)
 timer_err_t _make_timer(
   timer_id_t id,
   timer_prescale_t prescale,
-  timer_isr_trigger_t isr_trigger
+  timer_isr_trigger_t isr_trigger,
+  void *callback
 ) {
   timer_attr_t config;
 
@@ -142,11 +146,13 @@ timer_err_t _make_timer(
       config.tccr = &tccr_2;
       config.tcnt = &tcnt_2;
     break;
-
   }
 
   config.prescale = prescale;
   config.isr_trigger = isr_trigger;
+  config.callback = callback;
 
   return timer_construct(config);
 }
+
+void _cb() {}

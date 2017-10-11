@@ -2,6 +2,10 @@
 #define _TIMER_H
 
 #include <stdint.h>
+
+#ifndef TEST
+  #include <avr/interrupt.h>
+#endif
 /*******************************************************************************
 * PUBLIC TYPEDEFS
 *******************************************************************************/
@@ -47,6 +51,7 @@ typedef struct timer_attr_t {
   timer_prescale_t prescale;
   timer_id_t timer_id;
   timer_isr_trigger_t isr_trigger;
+  void *callback;
 } timer_attr_t;
 
 

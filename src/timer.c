@@ -16,6 +16,7 @@ typedef struct timer_t {
   timer_prescale_t prescale;
   timer_isr_trigger_t isr_trigger;
   timer_status_t status;
+  void (*callback)(void);
 } timer_t;
 /*******************************************************************************
 * Private Data
@@ -46,15 +47,14 @@ timer_err_t timer_construct(timer_attr_t config) {
     timers[config.timer_id].prescale = config.prescale;
     timers[config.timer_id].isr_trigger = config.isr_trigger;
 
-
     *timers[config.timer_id].tccr = 0 | (config.prescale);
     *timers[config.timer_id].tcnt = 0;
 
     _setInterruptTrigger(config.timer_id, config.isr_trigger);
 
-    // *timers[config.timer_id].timsk = 0 | config.isr_trigger;
-
     timers[config.timer_id].status = TIMER_STATUS_BUSY;
+
+    timers[config.timer_id].callback = config.callback;
   } else {
     err = TIMER_ERR_TIMER_IN_USE;
   }
@@ -81,3 +81,46 @@ void _setInterruptTrigger(timer_id_t id, timer_isr_trigger_t trigger) {
     break;
   }
 }
+
+/*******************************************************************************
+* Interrupt Service Routines
+*******************************************************************************/
+#ifndef TEST
+
+ISR (TIMER0_COMPA_vect) {
+  if (timers[TIMER_ID_0].callback != 0) {
+    timers[TIMER_ID_0].callback();
+  }
+}
+
+ISR (TIMER1_COMPA_vect) {
+  if (timers[TIMER_ID_1].callback != 0) {
+    timers[TIMER_ID_1].callback();
+  }
+}
+
+ISR (TIMER2_COMPA_vect) {
+  if (timers[TIMER_ID_2].callback != 0) {
+    timers[TIMER_ID_2].callback();
+  }
+}
+
+ISR(TIMER0_OVF_vect) {
+  if (timers[TIMER_ID_0].callback != 0) {
+    timers[TIMER_ID_0].callback();
+  }
+}
+
+ISR(TIMER1_0VF_vect) {
+  if (timers[TIMER_ID_1].callback != 0) {
+    timers[TIMER_ID_1].callback();
+  }
+}
+
+ISR(TIMER2_0VF_vect) {
+  if (timers[TIMER_ID_2].callback != 0) {
+    timers[TIMER_ID_2].callback();
+  }
+}
+
+#endif
